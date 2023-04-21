@@ -83,7 +83,7 @@ export class App extends Component {
         localStorage.setItem(MY_CONTACTS, JSON.stringify(contacts));
       }
     } catch (error) {
-      this.setState({ error: `Error accessing localStorage: ${error}` });
+      console.log(`Error accessing localStorage: ${error}`);
     }
   };
 
