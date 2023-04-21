@@ -9,6 +9,8 @@ import {
   Filter,
 } from 'components';
 
+const MY_CONTACTS = 'contacts';
+
 export class App extends Component {
   state = {
     contacts: [
@@ -57,10 +59,33 @@ export class App extends Component {
       };
     });
   };
+
   filterContacts = (contacts, filter) =>
     contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
+
+  componentDidMount = () => {
+    try {
+      const contactsStorage = JSON.parse(localStorage.getItem(MY_CONTACTS));
+      if (contactsStorage) {
+        this.setState({ contacts: contactsStorage });
+      }
+    } catch (error) {
+      console.log(`Error accessing localStorage: ${error}`);
+    }
+  };
+
+  componentDidUpdate = (_, prevState) => {
+    const { contacts } = this.state;
+    try {
+      if (prevState.contacts.length !== contacts.length) {
+        localStorage.setItem(MY_CONTACTS, JSON.stringify(contacts));
+      }
+    } catch (error) {
+      this.setState({ error: `Error accessing localStorage: ${error}` });
+    }
+  };
 
   render() {
     const { filter, contacts } = this.state;
